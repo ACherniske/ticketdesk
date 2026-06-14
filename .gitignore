@@ -1,0 +1,41 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment Variables (CRITICAL FOR SECURITY)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Production Build Artifacts
+build/
+
+# Vite / Frontend Cache
+.vite/
+.rolldown/
+
+# Testing (If you add Vitest/Playwright later)
+/coverage
+/.nyc_output
