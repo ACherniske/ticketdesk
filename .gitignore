@@ -22,3 +22,20 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment Variables (CRITICAL FOR SECURITY)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Production Build Artifacts
+build/
+
+# Vite / Frontend Cache
+.vite/
+.rolldown/
+
+# Testing (If you add Vitest/Playwright later)
+/coverage
+/.nyc_output
