@@ -1,0 +1,28 @@
+import React from 'react';
+import acwordmark from '../assets/AC-Wordmark.svg';
+
+const Footer: React.FC = () => {
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <footer className="w-full bg-bg text-text">
+      <div className="mx-auto max-w-7xl px-6 py-12 sm:py-14">
+        <div className="flex flex-col items-center justify-center gap-5 text-center">
+          <div className="w-full flex justify-center">
+            <img
+              src={acwordmark}
+              alt="Aiden Cherniske"
+              className="h-10 brightness-0 invert mx-auto"
+            />
+          </div>
+
+          <p className="text-sm text-text/70">
+            © {currentYear}. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
