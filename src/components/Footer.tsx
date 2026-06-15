@@ -1,7 +1,6 @@
-import React from 'react';
 import acwordmark from '../assets/AC-Wordmark.svg';
 
-const Footer: React.FC = () => {
+const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (

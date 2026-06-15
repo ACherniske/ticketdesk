@@ -1,7 +1,6 @@
-import React from 'react';
 import logo from '../assets/Logo.svg';
 
-export const Header: React.FC = () => {
+const Header = () => {
   return (
     <header className="max-w-2xl w-full mb-8">
       <div className="flex flex-row flex-nowrap items-center justify-start gap-3 text-left">
@@ -23,3 +22,5 @@ export const Header: React.FC = () => {
     </header>
   );
 };
+
+export default Header;

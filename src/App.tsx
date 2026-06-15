@@ -1,9 +1,8 @@
-import React from 'react';
-import { Header } from './components/Header';
-import { TicketForm } from './components/TicketForm';
+import Header  from './components/Header';
+import TicketForm from './components/TicketForm';
 import Footer from './components/Footer';
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <div className="min-h-screen flex flex-col items-center p-6 bg-bg text-text transition-colors duration-200">
       

@@ -3,7 +3,7 @@ import { portalConfig } from '../portal.config';
 import { ChevronDown } from 'lucide-react';
 import type { TicketPayload } from '../types/ticket';
 
-export const TicketForm: React.FC = () => {
+const TicketForm = () => {
   const [formData, setFormData] = useState<TicketPayload>({
     name: '',
     email: '',
@@ -167,3 +167,4 @@ export const TicketForm: React.FC = () => {
   );
 };
 
+export default TicketForm;
