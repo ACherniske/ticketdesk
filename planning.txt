@@ -1,0 +1,247 @@
+API Hand-Off Prompt
+
+Current Status:
+We have successfully authenticated with the GitHub Enterprise Server v3.13.0 GraphQL API, and we are able to interact with the ProjectV2 features in the organization Bloomfield (Project: Universal Amp, ID: MDk6UHJvamVjdFYyMTg=).
+
+Key Progress:
+Successfully Added Draft Issue:
+Draft issues can be added using the addProjectV2DraftIssue mutation.
+Example Command (working):
+bash
+
+Collapse
+Copy
+1
+2
+3
+4
+curl -H "Authorization: bearer <API_TOKEN>" \
+     -X POST \
+     -d '{"query":"mutation($projectId: ID!, $title: String!) { addProjectV2DraftIssue(input: {projectId: $projectId, title: $title}) { clientMutationId projectItem { id } } }", "variables":{"projectId":"MDk6UHJvamVjdFYyMTg=", "title":"Draft Issue via API"}}' \
+    https://github.iiviad.com/api/graphql
+Response when successful:
+json
+
+Collapse
+Copy
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+⌄
+⌄
+⌄
+⌄
+{
+  "data": {
+    "addProjectV2DraftIssue": {
+      "clientMutationId": null,
+      "projectItem": {
+        "id": "MDEzOlByb2plY3RWMkl0ZW02ODE="
+      }
+    }
+  }
+}
+Confirmed Field Configuration in Views:
+Using the ProjectV2View and ProjectV2SingleSelectField types, we can retrieve field configurations, dropdown field options, and metadata for fields within each view.
+Example Command to query fields:
+bash
+
+Collapse
+Copy
+1
+2
+3
+4
+curl -H "Authorization: bearer <API_TOKEN>" \
+     -X POST \
+     -d '{"query":"query($viewId: ID!) { node(id: $viewId) { ... on ProjectV2View { fields(first: 10) { nodes { __typename ... on ProjectV2SingleSelectField { name id options { id name } } } } } } }", "variables":{"viewId":"<VIEW_ID>"}}' \
+    https://github.iiviad.com/api/graphql
+Example Response:
+json
+
+Collapse
+Copy
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+⌄
+⌄
+⌄
+⌄
+⌄
+⌄
+⌄
+{
+  "data": {
+    "node": {
+      "fields": {
+        "nodes": [
+          {
+            "__typename": "ProjectV2SingleSelectField",
+            "name": "Status",
+            "id": "MDI2OlByb2plY3RWMlNpbmdsZVNlbGVjdEZpZWxkMjIz",
+            "options": [
+              { "id": "f75ad846", "name": "Todo" },
+              { "id": "47fc9ee4", "name": "In Progress" },
+              { "id": "98236657", "name": "Done" }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
+Fetched Project Items (Rows):
+Successfully retrieved rows/items from the project using the items query.
+Example Command:
+bash
+
+Collapse
+Copy
+1
+2
+3
+4
+curl -H "Authorization: bearer <API_TOKEN>" \
+     -X POST \
+     -d '{"query":"query($projectId: ID!) { node(id: $projectId) { ... on ProjectV2 { items(first: 10) { nodes { id createdAt updatedAt } } } } }", "variables":{"projectId":"MDk6UHJvamVjdFYyMTg="}}' \
+    https://github.iiviad.com/api/graphql
+Example Response:
+json
+
+Collapse
+Copy
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+⌄
+⌄
+⌄
+⌄
+⌄
+{
+  "data": {
+    "node": {
+      "items": {
+        "nodes": [
+          { "id": "MDEzOlByb2plY3RWMkl0ZW02NDE=", "createdAt": "2026-06-08T20:22:13Z", "updatedAt": "2026-06-10T17:33:41Z" },
+          { "id": "MDEzOlByb2plY3RWMkl0ZW02MzE=", "createdAt": "2026-06-04T20:35:27Z", "updatedAt": "2026-06-05T20:43:13Z" }
+        ]
+      }
+    }
+  }
+}
+Current Limitations on GitHub Enterprise Server v3.13.0:
+No Support for addProjectV2ItemByTitle:
+This mutation, which directly adds new items with text content (as a row in the table), is not supported in your server version.
+Cannot Attach Files/Images to Draft Issues:
+The API does not support attaching files or images directly to draft issues.
+Workaround: Use Markdown with externally hosted file/image links in the body field.
+Full Command Formatting
+1. Add a Draft Issue:
+Use this mutation to add new rows/tasks in the project directly:
+
+bash
+
+Collapse
+Save
+Copy
+1
+2
+3
+4
+curl -H "Authorization: bearer <API_TOKEN>" \
+     -X POST \
+     -d '{"query":"mutation($projectId: ID!, $title: String!) { addProjectV2DraftIssue(input: {projectId: $projectId, title: $title}) { clientMutationId projectItem { id } } }", "variables":{"projectId":"MDk6UHJvamVjdFYyMTg=", "title":"Draft Issue via API"}}' \
+    https://github.iiviad.com/api/graphql
+2. Attach Metadata (Fields) to Draft Issue
+To configure fields for an item (e.g., setting Status as "In Progress"):
+
+bash
+
+Collapse
+Save
+Copy
+1
+2
+3
+4
+curl -H "Authorization: bearer <API_TOKEN>" \
+     -X POST \
+     -d '{"query":"mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) { updateProjectV2ItemFieldValue(input: {projectId: $projectId, itemId: $itemId, fieldId: $fieldId, value: {singleSelectOptionId: $optionId}}) { projectV2Item { id } } }", "variables":{"projectId":"MDk6UHJvamVjdFYyMTg=", "itemId":"MDEzOlByb2plY3RWMkl0ZW02ODE=", "fieldId":"MDI2OlByb2plY3RWMlNpbmdsZVNlbGVjdEZpZWxkMjIz", "optionId":"47fc9ee4"}}' \
+     https://github.iiviad.com/api/graphql
+Replace:
+
+itemId: ID of the draft issue (e.g., MDEzOlByb2plY3RWMkl0ZW02ODE=).
+fieldId: ID for the Status field (MDI2OlByb2plY3RWMlNpbmdsZVNlbGVjdEZpZWxkMjIz).
+optionId: ID of the dropdown option for "In Progress" (47fc9ee4).
+3. Query Project Items
+Retrieve all items within the project:
+
+bash
+
+Collapse
+Save
+Copy
+1
+2
+3
+4
+curl -H "Authorization: bearer <API_TOKEN>" \
+     -X POST \
+     -d '{"query":"query($projectId: ID!) { node(id: $projectId) { ... on ProjectV2 { items(first: 20) { nodes { id createdAt updatedAt } } } } }", "variables":{"projectId":"MDk6UHJvamVjdFYyMTg="}}' \
+     https://github.iiviad.com/api/graphql
+4. Query Field Configurations in Views
+Retrieve all fields in a specific view:
+
+bash
+
+Collapse
+Save
+Copy
+1
+2
+3
+4
+curl -H "Authorization: bearer <API_TOKEN>" \
+     -X POST \
+     -d '{"query":"query($viewId: ID!) { node(id: $viewId) { ... on ProjectV2View { fields(first: 10) { nodes { __typename ... on ProjectV2SingleSelectField { name id options { id name } } } } } } }", "variables":{"viewId":"MDEzOlByb2plY3RWMlZpZXc0Mw=="}}' \
+     https://github.iiviad.com/api/graphql
+Replace viewId with the desired view’s ID.
+
+Limitations
+File attachments are not natively supported. Use Markdown-based links in the body field for attaching images or files.
+Consider pushing for an upgrade or verifying the schema for newer GitHub Enterprise Server features.
