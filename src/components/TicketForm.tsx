@@ -153,7 +153,7 @@ export const TicketForm: React.FC = () => {
             value={formData.description}
             onChange={handleChange}
             placeholder="Provide explicit context, reproduction steps, or details to help maintainers review this ticket efficiently..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-transparent text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 resize-y min-h-[160px]"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-transparent text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 resize-y min-h-40"
           />
         </div>
       </div>
