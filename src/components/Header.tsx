@@ -1,16 +1,15 @@
 import React from 'react';
-/* import wordmark from '../assets/Wordmark.svg'; */
 import logo from '../assets/Logo.svg';
 
 export const Header: React.FC = () => {
   return (
     <header className="max-w-2xl w-full mb-8">
-      <div className="flex flex-row flex-nowrap items-center justify-left gap-3 text-left">
-        {/* Logo Asset */}
+      <div className="flex flex-row flex-nowrap items-center justify-start gap-3 text-left">
+        {/* Logo Asset: Native dark in light mode, dynamically inverted in dark mode */}
         <img
           src={logo}
           alt="Aiden Cherniske"
-          className="h-8 w-auto shrink-0 brightness-0 invert"
+          className="h-8 w-auto shrink-0 dark:invert transition-all duration-200"
         />
 
         {/* Decorative Divider */}
