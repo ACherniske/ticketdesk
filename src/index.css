@@ -1,1 +1,55 @@
 @import "tailwindcss";
+
+/* Define the Ticket Portal design token theme configuration system */
+@theme {
+  --color-text: #4b5563;
+  --color-text-h: #0f172a;
+  --color-bg: #ffffff;
+  --color-border: #e2e8f0;
+  --color-code-bg: #f1f5f9;
+  --color-accent: #0ea5e9;
+  
+  --font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, Consolas, monospace;
+}
+
+/* Base style overrides to apply global theme typography and resets */
+@layer base {
+  :root {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    line-height: 1.45;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    letter-spacing: 0.18px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    @media (max-width: 1024px) {
+      font-size: 16px;
+    }
+  }
+
+  /* Automatic Dark Mode theme overrides */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-text: #cbd5e1;
+      --color-text-h: #f1f5f9;
+      --color-bg: #0f172a;
+      --color-border: #1e293b;
+      --color-code-bg: #1a202c;
+      --color-accent: #06b6d4;
+    }
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    color: var(--color-text-h);
+  }
+
+  body {
+    margin: 0;
+  }
+}
