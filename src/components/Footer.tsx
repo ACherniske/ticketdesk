@@ -12,7 +12,7 @@ const Footer = () => {
             <img
               src={acwordmark}
               alt="Aiden Cherniske"
-              className="h-10 w-auto dark:invert mx-auto transition-all duration-200"
+              className="h-8 w-auto dark:invert mx-auto transition-all duration-200"
             />
           </div>
 
