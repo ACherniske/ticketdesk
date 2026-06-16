@@ -21,7 +21,7 @@ const TicketForm = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
     console.log('Form Payload Submitted:', formData);
   };
