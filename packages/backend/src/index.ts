@@ -1,6 +1,7 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { rateLimiter } from './middleware/rateLimiter'
 import 'dotenv/config'
 
 const app = new Hono()
@@ -10,6 +11,8 @@ app.use('*', cors({
   allowMethods: ['POST', 'GET', 'OPTIONS'],
   allowHeaders: ['Content-Type'],
 }))
+
+app.use('/api/*', rateLimiter)
 
 app.get('/health', (c) => c.json({ ok: true, timestamp: new Date().toISOString() }))
 
