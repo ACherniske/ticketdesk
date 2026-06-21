@@ -1,18 +1,26 @@
 import React, { useState } from 'react';
 import { portalConfig } from '../portal.config';
 import { ChevronDown } from 'lucide-react';
-import type { TicketPayload } from '../types/ticket';
+import type { TicketPayload, SubmitResponse } from '../types/ticket';
+
+type SubmitState =
+  | { status: 'idle' }
+  | { status: 'submitting' }
+  | { status: 'success'; reference: string; url?: string }
+  | { status: 'error'; message: string }
 
 const TicketForm = () => {
-  const [formData, setFormData] = useState<TicketPayload>({
+  const [formData, setFormData] = useState({
     name: '',
     email: '',
     targetId: portalConfig.targets[0]?.id || '',
-    type: 'bug',
-    priority: 'medium',
+    type: 'bug' as TicketPayload['type'],
+    priority: 'medium' as TicketPayload['priority'],
     title: '',
     description: ''
   });
+
+  const [submitState, setSubmitState] = useState<SubmitState>({ status: 'idle' });
 
   const selectedTarget = portalConfig.targets.find(t => t.id === formData.targetId);
 
@@ -21,9 +29,50 @@ const TicketForm = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form Payload Submitted:', formData);
+    if (!selectedTarget) return;
+
+    setSubmitState({ status: 'submitting' });
+
+    const payload: TicketPayload = {
+      name: formData.name,
+      email: formData.email,
+      type: formData.type,
+      priority: formData.priority,
+      title: formData.title,
+      description: formData.description,
+      destination: selectedTarget.destination
+    };
+
+    try {
+      const res = await fetch(`${portalConfig.apiUrl}/api/submit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json() as SubmitResponse & { error?: string };
+
+      if (!res.ok) {
+        setSubmitState({ status: 'error', message: data.error ?? 'Submission failed.' });
+        return;
+      }
+
+      setSubmitState({ status: 'success', reference: data.reference, url: data.url });
+      setFormData({
+        name: '',
+        email: '',
+        targetId: portalConfig.targets[0]?.id || '',
+        type: 'bug',
+        priority: 'medium',
+        title: '',
+        description: ''
+      });
+
+    } catch {
+      setSubmitState({ status: 'error', message: 'Could not reach the server. Check your connection.' });
+    }
   };
 
   return (
@@ -67,7 +116,7 @@ const TicketForm = () => {
           >
             {portalConfig.targets.map(target => (
               <option key={target.id} value={target.id}>
-                {target.label} ({target.type === 'repo' ? 'Repository' : 'Board'})
+                {target.label} ({target.type === 'issue' ? 'Repository' : 'Board'})
               </option>
             ))}
           </select>
@@ -108,13 +157,13 @@ const TicketForm = () => {
           <div className="relative w-full">
             <select
               name="priority"
-                value={formData.priority}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-transparent focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 appearance-none pr-10 cursor-pointer"
-              >
-                {portalConfig.priorities.map(p => (
-                  <option key={p.value} value={p.value} style={{ color: '#0f172a' }}>{p.label}</option>
-                ))}
+              value={formData.priority}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-transparent focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 appearance-none pr-10 cursor-pointer"
+            >
+              {portalConfig.priorities.map(p => (
+                <option key={p.value} value={p.value} style={{ color: '#0f172a' }}>{p.label}</option>
+              ))}
             </select>
 
             <div className="absolute left-0 top-0 w-full h-full px-3 py-2 flex items-center pointer-events-none">
@@ -158,9 +207,27 @@ const TicketForm = () => {
         </div>
       </div>
 
+      {/* Status feedback */}
+      {submitState.status === 'success' && (
+        <div className="p-3 bg-green-50 border border-green-200 rounded-md text-sm text-green-800">
+          <p className="font-medium">Ticket submitted successfully!</p>
+          <p className="mt-1">Your reference number is <span className="font-mono font-semibold">{submitState.reference}</span>. A maintainer will follow up via email.</p>
+        </div>
+      )}
+
+      {submitState.status === 'error' && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-800">
+          {submitState.message}
+        </div>
+      )}
+
       <div className="pt-4 flex justify-end">
-        <button type="submit" className="px-6 py-2 bg-cyan-500 text-white font-medium rounded-md hover:opacity-90 active:scale-98 transition duration-150 cursor-pointer shadow-md">
-          Submit Ticket
+        <button
+          type="submit"
+          disabled={submitState.status === 'submitting'}
+          className="px-6 py-2 bg-cyan-500 text-white font-medium rounded-md hover:opacity-90 active:scale-98 transition duration-150 cursor-pointer shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {submitState.status === 'submitting' ? 'Submitting...' : 'Submit Ticket'}
         </button>
       </div>
     </form>
