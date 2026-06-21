@@ -29,6 +29,9 @@ dist-ssr
 .env.*.local
 !.env.example
 
+# Configuration Files
+packages/frontend/src/portal.config.ts
+
 # Production Build Artifacts
 build/
 
