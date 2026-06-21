@@ -1,8 +1,15 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
 import 'dotenv/config'
 
 const app = new Hono()
+
+app.use('*', cors({
+  origin: process.env.ALLOWED_ORIGIN ?? '*',
+  allowMethods: ['POST', 'GET', 'OPTIONS'],
+  allowHeaders: ['Content-Type'],
+}))
 
 app.get('/health', (c) => c.json({ ok: true, timestamp: new Date().toISOString() }))
 
