@@ -14,7 +14,7 @@ app.use('*', cors({
   allowHeaders: ['Content-Type'],
 }))
 
-app.use('/api/*', rateLimiter)
+app.use('/api/submit', rateLimiter)
 app.route('/api', submitRoute)
 app.route('/api', validateRoute)
 
