@@ -1,26 +1,6 @@
 import type { TicketPayload, SubmitResponse } from '@ticketdesk/shared'
 import { gql } from '../lib/github/graphql'
-
-function buildBody(payload: TicketPayload): string {
-  return [
-    `### Submitted by`,
-    `**Name:** ${payload.name}`,
-    `**Email:** ${payload.email}`,
-    ``,
-    `### Details`,
-    `**Type:** ${payload.type}`,
-    `**Priority:** ${payload.priority}`,
-    ``,
-    `### Description`,
-    payload.description,
-  ].join('\n')
-}
-
-function generateReference(): string {
-  const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '')
-  const rand = Math.random().toString(36).slice(2, 6).toUpperCase()
-  return `TKT-${stamp}-${rand}`
-}
+import { buildBody, generateReference } from '../lib/github/utils'
 
 async function createDraftIssue(
   projectId: string,
@@ -72,7 +52,7 @@ export async function submitProject(payload: TicketPayload): Promise<SubmitRespo
   const { projectId, fieldId, optionId } = payload.destination
 
   if (!projectId || !fieldId || !optionId) {
-    throw new Error('Missing projectId, fieldId, or optionId in destination — run validation first')
+    throw new Error('Missing projectId, fieldId, or optionId — run validation first')
   }
 
   const body = buildBody(payload)

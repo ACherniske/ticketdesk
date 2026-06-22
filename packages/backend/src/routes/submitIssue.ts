@@ -1,28 +1,8 @@
 import type { TicketPayload, SubmitResponse } from '@ticketdesk/shared'
+import { buildBody, generateReference } from '../lib/github/utils'
 
 const API_URL = process.env.GITHUB_API_URL ?? 'https://api.github.com'
 const TOKEN   = process.env.GITHUB_TOKEN
-
-function buildBody(payload: TicketPayload): string {
-  return [
-    `### Submitted by`,
-    `**Name:** ${payload.name}`,
-    `**Email:** ${payload.email}`,
-    ``,
-    `### Details`,
-    `**Type:** ${payload.type}`,
-    `**Priority:** ${payload.priority}`,
-    ``,
-    `### Description`,
-    payload.description,
-  ].join('\n')
-}
-
-function generateReference(): string {
-  const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '')
-  const rand = Math.random().toString(36).slice(2, 6).toUpperCase()
-  return `TKT-${stamp}-${rand}`
-}
 
 export async function submitIssue(payload: TicketPayload): Promise<SubmitResponse> {
   if (!TOKEN) throw new Error('GITHUB_TOKEN is not set')
