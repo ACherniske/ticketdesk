@@ -228,7 +228,7 @@ const TicketForm = ({ targets }: TicketFormProps) => {
         <button
           type="submit"
           disabled={submitState.status === 'submitting'}
-          className="px-6 py-2 bg-cyan-500 text-white font-medium rounded-md hover:opacity-90 active:scale-98 transition duration-150 cursor-pointer shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+          className="px-6 py-2 text-white font-medium rounded-md hover:opacity-90 active:scale-98 transition duration-150 cursor-pointer shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {submitState.status === 'submitting' ? 'Submitting...' : 'Submit Ticket'}
         </button>

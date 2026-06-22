@@ -2,16 +2,18 @@
 
 /* Define the Ticket Portal design token theme configuration system */
 @theme {
-  --color-text: #4b5563;
-  --color-text-h: #0f172a;
-  --color-bg: #ffffff;
-  --color-border: #e2e8f0;
-  --color-code-bg: #f1f5f9;
-  --color-accent: #0ea5e9;
-  
-  --font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --font-heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: ui-monospace, Consolas, monospace;
+  /* Color Palette */
+  --color-text: #D5D8CB; /* Gray text */
+  --color-text-h: #191919; /* Attalon Black */
+  --color-bg: #FFFFFF; /* White background */
+  --color-border: #D5D8CB; /* Light gray border */
+  --color-code-bg: #D5D8CB; /* Light gray background for code */
+  --color-accent: #00890B; /* Light Green accent */
+
+  /* Font */
+  --font-sans: 'Segoe UI', Roboto, system-ui, sans-serif; /* Official brand fonts */
+  --font-heading: 'Segoe UI', Roboto, system-ui, sans-serif; /* Heading font */
+  --font-mono: ui-monospace, Consolas, monospace; /* Monospace font */
 }
 
 /* Base style overrides to apply global theme typography and resets */
@@ -34,22 +36,71 @@
   /* Automatic Dark Mode theme overrides */
   @media (prefers-color-scheme: dark) {
     :root {
-      --color-text: #cbd5e1;
-      --color-text-h: #f1f5f9;
-      --color-bg: #0f172a;
-      --color-border: #1e293b;
-      --color-code-bg: #1a202c;
-      --color-accent: #06b6d4;
+      --color-text: #FFFFFF; /* White text */
+      --color-text-h: #37D233; /* Light Green highlights */
+      --color-bg: #191919; /* Attalon Black background */
+      --color-border: #00890B; /* Dark Green border */
+      --color-code-bg: #1A202C; /* Darker Gray/Black for code bg */
+      --color-accent: #00890B; /* Maintain green accent */
     }
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     font-weight: 500;
-    color: var(--color-text-h);
+    color: var(--color-text-h); /* Highlighted text color from branding */
   }
 
   body {
     margin: 0;
+  }
+
+  input, textarea, button {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    border: 1px solid var(--color-border); /* Brand-aligned border */
+    padding: 0.5rem;
+    background-color: var(--color-code-bg); /* Background for form controls */
+    color: var(--color-text);
+  }
+
+  button {
+    background-color: var(--color-accent); /* Green button color */
+    color: var(--color-bg);                /* White text on button */
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: var(--color-text-h); /* Attalon Black on hover */
+    color: var(--color-accent); /* Green text on hover */
+  }
+
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+    color: var(--color-text-h); /* Black for better contrast */
+  }
+
+  code {
+    background-color: var(--color-code-bg);
+    color: var(--color-text-h); /* Black for readable code */
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+
+  footer {
+    background-color: var(--color-text-h); /* Attalon Black */
+    color: var(--color-bg); /* White text */
+    text-align: center;
+    padding: 0.5rem 0;
+    font-size: 14px;
   }
 }
