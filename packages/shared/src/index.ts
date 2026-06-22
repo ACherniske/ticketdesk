@@ -7,7 +7,6 @@ export type TicketDestination =
       kind: 'project'
       owner: string
       projectNumber: number
-      // Resolved by /api/validate at frontend startup
       projectId?: string
       fieldId?: string
       optionId?: string

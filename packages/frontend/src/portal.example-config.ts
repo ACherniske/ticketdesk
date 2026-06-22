@@ -17,6 +17,17 @@ export const portalConfig: PortalConfig = {
         repo: 'example-repo'
       },
       info: 'Opens an issue directly on the Example Repository.'
+    },
+    {
+      id: 'example-project',
+      label: 'Example Project',
+      type: 'project',
+      destination: {
+        kind: 'project',
+        owner: 'example-owner',
+        projectNumber: 1
+      },
+      info: 'Adds a draft item to the Example Project board for review.'
     }
   ],
 

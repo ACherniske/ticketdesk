@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
 import { portalConfig } from '../portal.config';
 import { ChevronDown } from 'lucide-react';
-import type { TicketPayload, SubmitResponse } from '../types/ticket';
+import type { TargetOption, TicketPayload, SubmitResponse } from '../types/ticket';
 
 type SubmitState =
   | { status: 'idle' }
   | { status: 'submitting' }
-  | { status: 'success'; reference: string; url?: string }
+  | { status: 'success'; reference: string }
   | { status: 'error'; message: string }
 
-const TicketForm = () => {
+interface TicketFormProps {
+  targets: TargetOption[]
+}
+
+const TicketForm = ({ targets }: TicketFormProps) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    targetId: portalConfig.targets[0]?.id || '',
+    targetId: targets[0]?.id || '',
     type: 'bug' as TicketPayload['type'],
     priority: 'medium' as TicketPayload['priority'],
     title: '',
@@ -22,7 +26,7 @@ const TicketForm = () => {
 
   const [submitState, setSubmitState] = useState<SubmitState>({ status: 'idle' });
 
-  const selectedTarget = portalConfig.targets.find(t => t.id === formData.targetId);
+  const selectedTarget = targets.find(t => t.id === formData.targetId);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -59,11 +63,11 @@ const TicketForm = () => {
         return;
       }
 
-      setSubmitState({ status: 'success', reference: data.reference, url: data.url });
+      setSubmitState({ status: 'success', reference: data.reference });
       setFormData({
         name: '',
         email: '',
-        targetId: portalConfig.targets[0]?.id || '',
+        targetId: targets[0]?.id || '',
         type: 'bug',
         priority: 'medium',
         title: '',
@@ -114,7 +118,7 @@ const TicketForm = () => {
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 appearance-none pr-10 cursor-pointer"
           >
-            {portalConfig.targets.map(target => (
+            {targets.map(target => (
               <option key={target.id} value={target.id}>
                 {target.label} ({target.type === 'issue' ? 'Repository' : 'Board'})
               </option>
@@ -207,7 +211,6 @@ const TicketForm = () => {
         </div>
       </div>
 
-      {/* Status feedback */}
       {submitState.status === 'success' && (
         <div className="p-3 bg-green-50 border border-green-200 rounded-md text-sm text-green-800">
           <p className="font-medium">Ticket submitted successfully!</p>
