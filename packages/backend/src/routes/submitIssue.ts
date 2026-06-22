@@ -1,5 +1,5 @@
 import type { TicketPayload, SubmitResponse } from '@ticketdesk/shared'
-import { buildBody, generateReference } from '../lib/github/utils'
+import { buildBody } from '../lib/github/utils'
 
 const API_URL = process.env.GITHUB_API_URL ?? 'https://api.github.com'
 const TOKEN   = process.env.GITHUB_TOKEN
@@ -30,10 +30,10 @@ export async function submitIssue(payload: TicketPayload): Promise<SubmitRespons
     throw new Error(`GitHub API error ${res.status}: ${error}`)
   }
 
-  const data = await res.json() as { html_url: string }
+  const data = await res.json() as { number: number; html_url: string }
 
   return {
-    reference: generateReference(),
+    reference: `#${data.number}`,
     url: data.html_url,
   }
 }

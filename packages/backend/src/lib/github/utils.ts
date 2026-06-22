@@ -14,9 +14,3 @@ export function buildBody(payload: TicketPayload): string {
     payload.description,
   ].join('\n')
 }
-
-export function generateReference(): string {
-  const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '')
-  const rand = Math.random().toString(36).slice(2, 6).toUpperCase()
-  return `TKT-${stamp}-${rand}`
-}

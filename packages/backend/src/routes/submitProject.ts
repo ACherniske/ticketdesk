@@ -1,6 +1,6 @@
 import type { TicketPayload, SubmitResponse } from '@ticketdesk/shared'
 import { gql } from '../lib/github/graphql'
-import { buildBody, generateReference } from '../lib/github/utils'
+import { buildBody } from '../lib/github/utils'
 
 async function createDraftIssue(
   projectId: string,
@@ -44,6 +44,12 @@ async function setNeedsReview(
   `, { projectId, itemId, fieldId, optionId })
 }
 
+function shortenItemId(itemId: string): string {
+  // Node IDs look like PVTI_kwDOEZQHX84BbToeABC123
+  // Take the last 8 characters for a short but traceable reference
+  return `DRAFT-${itemId.slice(-8).toUpperCase()}`
+}
+
 export async function submitProject(payload: TicketPayload): Promise<SubmitResponse> {
   if (payload.destination.kind !== 'project') {
     throw new Error('Invalid destination kind')
@@ -59,5 +65,5 @@ export async function submitProject(payload: TicketPayload): Promise<SubmitRespo
   const itemId = await createDraftIssue(projectId, payload.title, body)
   await setNeedsReview(projectId, itemId, fieldId, optionId)
 
-  return { reference: generateReference() }
+  return { reference: shortenItemId(itemId) }
 }
