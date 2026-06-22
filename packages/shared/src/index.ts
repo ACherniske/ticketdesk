@@ -3,7 +3,15 @@ export type TicketPriority = 'low' | 'medium' | 'high'
 
 export type TicketDestination =
   | { kind: 'issue'; owner: string; repo: string }
-  | { kind: 'project'; owner: string; projectNumber: number; fieldId?: string; optionId?: string }
+  | {
+      kind: 'project'
+      owner: string
+      projectNumber: number
+      // Resolved by /api/validate at frontend startup
+      projectId?: string
+      fieldId?: string
+      optionId?: string
+    }
 
 export interface TicketPayload {
   name: string
@@ -18,4 +26,10 @@ export interface TicketPayload {
 export interface SubmitResponse {
   reference: string
   url?: string
+}
+
+export interface ValidateResponse {
+  projectId: string
+  fieldId: string
+  optionId: string
 }
