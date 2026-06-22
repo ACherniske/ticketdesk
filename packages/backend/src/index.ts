@@ -3,6 +3,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { rateLimiter } from './middleware/rateLimiter'
 import { submitRoute } from './routes/index'
+import { validateRoute } from './routes/validate'
 import 'dotenv/config'
 
 const app = new Hono()
@@ -15,6 +16,7 @@ app.use('*', cors({
 
 app.use('/api/*', rateLimiter)
 app.route('/api', submitRoute)
+app.route('/api', validateRoute)
 
 app.get('/health', (c) => c.json({ ok: true, timestamp: new Date().toISOString() }))
 
