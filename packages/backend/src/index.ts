@@ -1,10 +1,10 @@
+import 'dotenv/config'
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { rateLimiter } from './middleware/rateLimiter'
 import { submitRoute } from './routes/index'
 import { validateRoute } from './routes/validate'
-import 'dotenv/config'
 
 const app = new Hono()
 
